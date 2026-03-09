@@ -59,7 +59,7 @@ export function ListingsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(property => (
           <Card key={property.id} className="overflow-hidden hover:border-zinc-600 transition-colors cursor-pointer group">
-            <div className="relative h-48 overflow-hidden">
+            <div className="relative h-48 overflow-hidden -mt-4">
               <img src={property.imageUrl} alt={property.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               <Badge className={`absolute bottom-3 left-3 capitalize ${STATUS_STYLES[property.status]}`}>{property.status}</Badge>
             </div>

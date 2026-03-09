@@ -15,7 +15,7 @@ export function PropertyCard({ property }: { property: Property }) {
 
   return (
     <Card className="overflow-hidden hover:border-zinc-600 transition-colors cursor-pointer group">
-      <div className="relative h-44 overflow-hidden">
+      <div className="relative h-44 overflow-hidden -mt-4">
         <img src={imageUrl} alt={name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         <Button variant="secondary" size="icon" className="absolute top-3 right-3 h-8 w-8 rounded-full opacity-80 hover:opacity-100">
           <Eye className="h-4 w-4" />
