@@ -1,8 +1,12 @@
 import { useRouter } from '@/lib/router'
 import { DashboardPage } from '@/pages/DashboardPage'
+import { ListingsPage } from '@/pages/ListingsPage'
 
 export function PageRouter() {
   const { page } = useRouter()
-  if (page === 'dashboard') return <DashboardPage />
-  return <div className="p-6 text-muted-foreground">Coming soon: {page}</div>
+  const pages: Partial<Record<string, React.ReactElement>> = {
+    dashboard: <DashboardPage />,
+    listings: <ListingsPage />,
+  }
+  return pages[page] ?? <div className="p-6 text-muted-foreground">Coming soon: {page}</div>
 }
