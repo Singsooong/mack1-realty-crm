@@ -43,11 +43,11 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
       )}
     >
       {/* Logo */}
-      <div className="flex items-center justify-center h-[72px] px-4">
+      <div className="flex items-center h-[72px] px-3">
         {isCollapsed ? (
-          <img src={logo} alt="Mack 1 Realty Group" className="h-8 w-8 object-contain object-left" />
+          <img src={logo} alt="Mack 1 Realty Group" className="h-10 w-10 object-contain object-left" />
         ) : (
-          <img src={logo} alt="Mack 1 Realty Group" className="h-10 w-full object-contain object-left" />
+          <img src={logo} alt="Mack 1 Realty Group" className="h-14 w-full object-contain object-left" />
         )}
       </div>
 
