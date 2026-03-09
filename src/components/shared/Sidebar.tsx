@@ -3,6 +3,7 @@ import {
   CheckSquare, Calendar, FileSignature, Settings, ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import logo from '@/assets/mack1-transparent.png'
 import { NavItem } from './NavItem'
 import { cn } from '@/lib/utils'
 import { useRouter } from '@/lib/router'
@@ -42,12 +43,11 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
       )}
     >
       {/* Logo */}
-      <div className={cn('flex items-center h-[72px] px-4', isCollapsed ? 'justify-center' : 'gap-3')}>
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-foreground shrink-0">
-          <Home className="w-4 h-4 text-background" />
-        </div>
-        {!isCollapsed && (
-          <span className="text-lg font-bold tracking-tight text-foreground">Mack 1</span>
+      <div className="flex items-center justify-center h-[72px] px-4">
+        {isCollapsed ? (
+          <img src={logo} alt="Mack 1 Realty Group" className="h-8 w-8 object-contain object-left" />
+        ) : (
+          <img src={logo} alt="Mack 1 Realty Group" className="h-10 w-full object-contain object-left" />
         )}
       </div>
 
