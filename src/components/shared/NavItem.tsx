@@ -20,8 +20,8 @@ export function NavItem({ icon: Icon, label, isActive, isCollapsed, onClick }: N
         'w-full transition-all',
         !isCollapsed && 'justify-start gap-3',
         isActive
-          ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-          : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+          ? 'bg-foreground/10 text-foreground font-semibold hover:bg-foreground/10'
+          : 'text-sidebar-foreground hover:bg-foreground/6 hover:text-foreground',
       )}
       onClick={onClick}
     >
