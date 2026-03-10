@@ -14,8 +14,8 @@ export function TrendBadge({ value, direction }: TrendBadgeProps) {
       className={cn(
         'gap-1 text-xs font-semibold',
         direction === 'up'
-          ? 'bg-emerald-950 text-emerald-400 hover:bg-emerald-950'
-          : 'bg-red-950 text-red-400 hover:bg-red-950',
+          ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-400 dark:hover:bg-emerald-950'
+          : 'bg-red-100 text-red-700 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-950',
       )}
     >
       {direction === 'up'
