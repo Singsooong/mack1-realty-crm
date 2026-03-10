@@ -38,10 +38,10 @@ export function RevenueChart() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-3 rounded-sm bg-muted-foreground/60" />Deals
+              <span className="inline-block w-3 h-3 rounded-sm bg-chart-3" />Deals
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-3 rounded-sm bg-muted-foreground/30" />Deal value
+              <span className="inline-block w-3 h-3 rounded-sm bg-chart-1" />Deal value
             </span>
           </div>
           <Select defaultValue="2025">
@@ -63,8 +63,8 @@ export function RevenueChart() {
               <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
               <YAxis tickFormatter={formatYAxis} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} width={48} ticks={[0, 100000, 200000, 400000, 600000, 700000]} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: 'oklch(0 0 0 / 5%)' }} />
-              <Bar dataKey="deals" fill="oklch(0.35 0 0)" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="dealValue" fill="oklch(0.55 0 0)" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="deals" fill="var(--chart-3)" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="dealValue" fill="var(--chart-1)" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

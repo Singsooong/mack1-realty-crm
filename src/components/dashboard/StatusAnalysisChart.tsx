@@ -28,7 +28,7 @@ export function StatusAnalysisChart() {
             <ResponsiveContainer width={200} height={200}>
               <PieChart>
                 <Pie data={statusData} cx={95} cy={95} innerRadius={58} outerRadius={88}
-                  dataKey="value" startAngle={90} endAngle={-270} strokeWidth={2} stroke="oklch(0.145 0 0)">
+                  dataKey="value" startAngle={90} endAngle={-270} strokeWidth={2} stroke="var(--card)">
                   {statusData.map((entry) => (
                     <Cell key={entry.label} fill={entry.color} />
                   ))}
