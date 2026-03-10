@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 
 type ThemeContextValue = {
   isDark: boolean
@@ -9,8 +9,9 @@ const ThemeContext = createContext<ThemeContextValue | null>(null)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [isDark, setIsDark] = useState<boolean>(() => {
-    const stored = localStorage.getItem('theme')
-    return stored ? stored === 'dark' : true // default to dark
+    // Read from DOM — the index.html inline script already applied the correct class
+    // before React mounted, so this is the single source of truth for initial state.
+    return document.documentElement.classList.contains('dark')
   })
 
   useEffect(() => {
@@ -19,11 +20,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     } else {
       document.documentElement.classList.remove('dark')
     }
-    localStorage.setItem('theme', isDark ? 'dark' : 'light')
+    try {
+      localStorage.setItem('theme', isDark ? 'dark' : 'light')
+    } catch {
+      // localStorage unavailable (sandboxed iframe, strict privacy mode) — ignore
+    }
   }, [isDark])
 
+  const toggleTheme = useCallback(() => setIsDark(d => !d), [])
+
+  const value = useMemo(() => ({ isDark, toggleTheme }), [isDark, toggleTheme])
+
   return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme: () => setIsDark(d => !d) }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   )
