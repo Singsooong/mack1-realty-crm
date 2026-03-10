@@ -14,12 +14,14 @@ interface NavItemProps {
 export function NavItem({ icon: Icon, label, isActive, isCollapsed, onClick }: NavItemProps) {
   const btn = (
     <Button
-      variant={isActive ? 'secondary' : 'ghost'}
+      variant="ghost"
       size={isCollapsed ? 'icon' : 'default'}
       className={cn(
         'w-full transition-all',
         !isCollapsed && 'justify-start gap-3',
-        isActive && 'font-semibold',
+        isActive
+          ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+          : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
       )}
       onClick={onClick}
     >
