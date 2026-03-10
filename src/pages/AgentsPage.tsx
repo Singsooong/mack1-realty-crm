@@ -18,7 +18,7 @@ export function AgentsPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {agentsData.map(agent => (
-          <Card key={agent.id} className="hover:border-zinc-600 transition-colors">
+          <Card key={agent.id} className="hover:border-border transition-colors">
             <CardContent className="p-5">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -31,7 +31,7 @@ export function AgentsPage() {
                     <p className="text-xs text-muted-foreground">{agent.specialty}</p>
                   </div>
                 </div>
-                <Badge variant={agent.status === 'active' ? 'secondary' : 'outline'} className={agent.status === 'active' ? 'bg-emerald-950 text-emerald-400 hover:bg-emerald-950' : ''}>
+                <Badge variant={agent.status === 'active' ? 'secondary' : 'outline'} className={agent.status === 'active' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-400 dark:hover:bg-emerald-950' : ''}>
                   {agent.status}
                 </Badge>
               </div>

@@ -7,18 +7,18 @@ import { MoreHorizontal } from 'lucide-react'
 import type { Lead } from '@/types'
 
 const STAGE_STYLES: Record<Lead['stage'], string> = {
-  new: 'bg-zinc-800 text-zinc-300',
-  contacted: 'bg-blue-950 text-blue-400',
-  qualified: 'bg-purple-950 text-purple-400',
-  proposal: 'bg-amber-950 text-amber-400',
-  closed: 'bg-emerald-950 text-emerald-400',
+  new: 'bg-muted text-muted-foreground',
+  contacted: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
+  qualified: 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-400',
+  proposal: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400',
+  closed: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
 }
 
 const SOURCE_STYLES: Record<Lead['source'], string> = {
-  website: 'bg-sky-950 text-sky-400',
-  referral: 'bg-violet-950 text-violet-400',
-  social: 'bg-pink-950 text-pink-400',
-  ads: 'bg-orange-950 text-orange-400',
+  website: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-400',
+  referral: 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-400',
+  social: 'bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-400',
+  ads: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-400',
 }
 
 export function LeadsPage() {

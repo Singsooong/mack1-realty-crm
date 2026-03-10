@@ -7,10 +7,10 @@ import { Clock, MapPin, Users } from 'lucide-react'
 import type { CalendarEvent } from '@/types'
 
 const EVENT_STYLES: Record<CalendarEvent['type'], string> = {
-  showing: 'bg-emerald-950 text-emerald-400',
-  meeting: 'bg-blue-950 text-blue-400',
-  inspection: 'bg-amber-950 text-amber-400',
-  closing: 'bg-purple-950 text-purple-400',
+  showing: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
+  meeting: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
+  inspection: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400',
+  closing: 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-400',
 }
 
 export function CalendarPage() {
@@ -50,7 +50,7 @@ export function CalendarPage() {
               ) : (
                 <div className="flex flex-col gap-3">
                   {todayEvents.map(event => (
-                    <div key={event.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border hover:border-zinc-600 transition-colors">
+                    <div key={event.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border hover:border-border/60 transition-colors">
                       <Badge className={`shrink-0 capitalize ${EVENT_STYLES[event.type]}`}>{event.type}</Badge>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-foreground text-sm">{event.title}</p>

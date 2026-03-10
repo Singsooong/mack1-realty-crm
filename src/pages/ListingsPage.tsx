@@ -9,9 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import type { Property } from '@/types'
 
 const STATUS_STYLES: Record<Property['status'], string> = {
-  available: 'bg-emerald-950 text-emerald-400 hover:bg-emerald-950',
-  sold: 'bg-zinc-800 text-zinc-400 hover:bg-zinc-800',
-  pending: 'bg-amber-950 text-amber-400 hover:bg-amber-950',
+  available: 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-400 dark:hover:bg-emerald-950',
+  sold: 'bg-muted text-muted-foreground hover:bg-muted',
+  pending: 'bg-amber-100 text-amber-700 hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-400 dark:hover:bg-amber-950',
 }
 
 export function ListingsPage() {
@@ -58,7 +58,7 @@ export function ListingsPage() {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(property => (
-          <Card key={property.id} className="overflow-hidden hover:border-zinc-600 transition-colors cursor-pointer group">
+          <Card key={property.id} className="overflow-hidden hover:border-border transition-colors cursor-pointer group">
             <div className="relative h-48 overflow-hidden -mt-4">
               <img src={property.imageUrl} alt={property.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               <Badge className={`absolute bottom-3 left-3 capitalize ${STATUS_STYLES[property.status]}`}>{property.status}</Badge>

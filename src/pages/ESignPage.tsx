@@ -9,15 +9,15 @@ import { FileSignature, Clock, Users, Calendar, Send, Eye, Download, MoreHorizon
 import type { Document } from '@/types'
 
 const STATUS_STYLES: Record<Document['status'], string> = {
-  draft: 'bg-zinc-800 text-zinc-300',
-  sent: 'bg-blue-950 text-blue-400',
-  signed: 'bg-emerald-950 text-emerald-400',
-  expired: 'bg-red-950 text-red-400',
+  draft: 'bg-muted text-muted-foreground',
+  sent: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
+  signed: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
+  expired: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400',
 }
 
 function DocumentCard({ doc, onView }: { doc: Document; onView: (doc: Document) => void }) {
   return (
-    <Card className="hover:border-zinc-600 transition-colors">
+    <Card className="hover:border-border transition-colors">
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex items-start gap-2.5">

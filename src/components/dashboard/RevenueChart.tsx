@@ -38,10 +38,10 @@ export function RevenueChart() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-3 rounded-sm bg-zinc-600" />Deals
+              <span className="inline-block w-3 h-3 rounded-sm bg-muted-foreground/60" />Deals
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-3 rounded-sm bg-zinc-400" />Deal value
+              <span className="inline-block w-3 h-3 rounded-sm bg-muted-foreground/30" />Deal value
             </span>
           </div>
           <Select defaultValue="2025">
@@ -59,10 +59,10 @@ export function RevenueChart() {
         <div className="h-[260px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={revenueData} margin={{ top: 5, right: 5, left: 0, bottom: 0 }} barCategoryGap="30%" barGap={2}>
-              <CartesianGrid vertical={false} stroke="oklch(1 0 0 / 8%)" strokeDasharray="0" />
-              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'oklch(0.708 0 0)' }} />
-              <YAxis tickFormatter={formatYAxis} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'oklch(0.708 0 0)' }} width={48} ticks={[0, 100000, 200000, 400000, 600000, 700000]} />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'oklch(1 0 0 / 4%)' }} />
+              <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="0" />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
+              <YAxis tickFormatter={formatYAxis} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} width={48} ticks={[0, 100000, 200000, 400000, 600000, 700000]} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'oklch(0 0 0 / 5%)' }} />
               <Bar dataKey="deals" fill="oklch(0.35 0 0)" radius={[3, 3, 0, 0]} />
               <Bar dataKey="dealValue" fill="oklch(0.55 0 0)" radius={[3, 3, 0, 0]} />
             </BarChart>

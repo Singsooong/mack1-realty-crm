@@ -5,16 +5,16 @@ import { Button } from '@/components/ui/button'
 import type { Property } from '@/types'
 
 const STATUS_STYLES: Record<Property['status'], string> = {
-  available: 'bg-emerald-950 text-emerald-400 hover:bg-emerald-950',
-  sold: 'bg-zinc-800 text-zinc-400 hover:bg-zinc-800',
-  pending: 'bg-amber-950 text-amber-400 hover:bg-amber-950',
+  available: 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-400 dark:hover:bg-emerald-950',
+  sold: 'bg-muted text-muted-foreground hover:bg-muted',
+  pending: 'bg-amber-100 text-amber-700 hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-400 dark:hover:bg-amber-950',
 }
 
 export function PropertyCard({ property }: { property: Property }) {
   const { name, location, price, beds, baths, sqft, imageUrl, status } = property
 
   return (
-    <Card className="overflow-hidden hover:border-zinc-600 transition-colors cursor-pointer group">
+    <Card className="overflow-hidden hover:border-border transition-colors cursor-pointer group">
       <div className="relative h-44 overflow-hidden -mt-4">
         <img src={imageUrl} alt={name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         <Button variant="secondary" size="icon" className="absolute top-3 right-3 h-8 w-8 rounded-full opacity-80 hover:opacity-100">

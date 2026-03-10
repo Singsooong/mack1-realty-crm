@@ -8,9 +8,9 @@ import { Input } from '@/components/ui/input'
 import { Search, MoreHorizontal } from 'lucide-react'
 
 const TYPE_STYLES: Record<string, string> = {
-  buyer: 'bg-blue-950 text-blue-400 hover:bg-blue-950',
-  seller: 'bg-purple-950 text-purple-400 hover:bg-purple-950',
-  investor: 'bg-amber-950 text-amber-400 hover:bg-amber-950',
+  buyer: 'bg-blue-100 text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-950',
+  seller: 'bg-purple-100 text-purple-700 hover:bg-purple-100 dark:bg-purple-950 dark:text-purple-400 dark:hover:bg-purple-950',
+  investor: 'bg-amber-100 text-amber-700 hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-400 dark:hover:bg-amber-950',
 }
 
 export function ContactsPage() {
@@ -67,7 +67,7 @@ export function ContactsPage() {
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">{contact.phone}</TableCell>
                 <TableCell>
-                  <Badge variant={contact.status === 'active' ? 'secondary' : 'outline'} className={contact.status === 'active' ? 'bg-emerald-950 text-emerald-400 hover:bg-emerald-950' : ''}>
+                  <Badge variant={contact.status === 'active' ? 'secondary' : 'outline'} className={contact.status === 'active' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-400 dark:hover:bg-emerald-950' : ''}>
                     {contact.status}
                   </Badge>
                 </TableCell>

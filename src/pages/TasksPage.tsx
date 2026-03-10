@@ -10,17 +10,17 @@ import { cn } from '@/lib/utils'
 import type { Task } from '@/types'
 
 const PRIORITY_STYLES: Record<Task['priority'], string> = {
-  high: 'bg-red-950 text-red-400',
-  medium: 'bg-amber-950 text-amber-400',
-  low: 'bg-zinc-800 text-zinc-400',
+  high: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400',
+  medium: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400',
+  low: 'bg-muted text-muted-foreground',
 }
 
 const CATEGORY_STYLES: Record<Task['category'], string> = {
-  'follow-up': 'bg-blue-950 text-blue-400',
-  'inspection': 'bg-purple-950 text-purple-400',
-  'paperwork': 'bg-zinc-800 text-zinc-400',
-  'showing': 'bg-emerald-950 text-emerald-400',
-  'other': 'bg-zinc-800 text-zinc-400',
+  'follow-up': 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
+  'inspection': 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-400',
+  'paperwork': 'bg-muted text-muted-foreground',
+  'showing': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
+  'other': 'bg-muted text-muted-foreground',
 }
 
 export function TasksPage() {
