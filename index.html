@@ -7,10 +7,14 @@
     <title>databrain-dark</title>
     <script>
       (function() {
-        var theme = localStorage.getItem('theme');
-        if (theme === 'light') {
-          document.documentElement.classList.remove('dark');
-        } else {
+        try {
+          var theme = localStorage.getItem('theme');
+          if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+          } else {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {
           document.documentElement.classList.add('dark');
         }
       })();
