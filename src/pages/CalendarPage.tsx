@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { eventsData } from '@/lib/mock-data'
+import { useEvents } from '@/hooks/useEvents'
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -14,17 +14,21 @@ const EVENT_STYLES: Record<CalendarEvent['type'], string> = {
 }
 
 export function CalendarPage() {
+  const { events, loading, error } = useEvents()
   const [selected, setSelected] = useState<Date | undefined>(new Date('2026-03-10'))
 
+  if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading calendar…</div>
+  if (error) return <div className="p-6 text-sm text-destructive">Error: {error}</div>
+
   const selectedDateStr = selected?.toISOString().split('T')[0]
-  const todayEvents = eventsData.filter(e => e.date === selectedDateStr)
-  const allUpcoming = eventsData.filter(e => e.date >= new Date().toISOString().split('T')[0]).slice(0, 5)
+  const todayEvents = events.filter(e => e.date === selectedDateStr)
+  const allUpcoming = events.filter(e => e.date >= new Date().toISOString().split('T')[0]).slice(0, 5)
 
   return (
     <div className="p-6 flex flex-col gap-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Calendar</h1>
-        <p className="text-sm text-muted-foreground">{eventsData.length} events this month</p>
+        <p className="text-sm text-muted-foreground">{events.length} events this month</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-6">

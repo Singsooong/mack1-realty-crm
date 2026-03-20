@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { MapPin, BedDouble, Bath, Square, Search, SlidersHorizontal } from 'lucide-react'
-import { propertiesData } from '@/lib/mock-data'
+import { useProperties } from '@/hooks/useProperties'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,10 +15,14 @@ const STATUS_STYLES: Record<Property['status'], string> = {
 }
 
 export function ListingsPage() {
+  const { properties, loading, error } = useProperties()
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
-  const filtered = propertiesData.filter(p => {
+  if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading listings…</div>
+  if (error) return <div className="p-6 text-sm text-destructive">Error: {error}</div>
+
+  const filtered = properties.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.location.city.toLowerCase().includes(search.toLowerCase())
     const matchStatus = statusFilter === 'all' || p.status === statusFilter
@@ -30,7 +34,7 @@ export function ListingsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Listings</h1>
-          <p className="text-sm text-muted-foreground">{propertiesData.length} total properties</p>
+          <p className="text-sm text-muted-foreground">{properties.length} total properties</p>
         </div>
         <Button size="sm">+ Add Listing</Button>
       </div>

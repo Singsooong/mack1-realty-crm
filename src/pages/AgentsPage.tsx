@@ -1,4 +1,4 @@
-import { agentsData } from '@/lib/mock-data'
+import { useAgents } from '@/hooks/useAgents'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -6,18 +6,23 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Star, Phone, Mail, TrendingUp } from 'lucide-react'
 
 export function AgentsPage() {
+  const { agents, loading, error } = useAgents()
+
+  if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading agents…</div>
+  if (error) return <div className="p-6 text-sm text-destructive">Error: {error}</div>
+
   return (
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Agents</h1>
-          <p className="text-sm text-muted-foreground">{agentsData.length} agents on your team</p>
+          <p className="text-sm text-muted-foreground">{agents.length} agents on your team</p>
         </div>
         <Button size="sm">+ Invite Agent</Button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {agentsData.map(agent => (
+        {agents.map(agent => (
           <Card key={agent.id} className="hover:border-border transition-colors">
             <CardContent className="p-5">
               <div className="flex items-start justify-between mb-4">

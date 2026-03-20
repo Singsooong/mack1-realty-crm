@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { contactsData } from '@/lib/mock-data'
+import { useContacts } from '@/hooks/useContacts'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -14,8 +14,13 @@ const TYPE_STYLES: Record<string, string> = {
 }
 
 export function ContactsPage() {
+  const { contacts, loading, error } = useContacts()
   const [search, setSearch] = useState('')
-  const filtered = contactsData.filter(c =>
+
+  if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading contacts…</div>
+  if (error) return <div className="p-6 text-sm text-destructive">Error: {error}</div>
+
+  const filtered = contacts.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
     c.email.toLowerCase().includes(search.toLowerCase())
   )
@@ -25,7 +30,7 @@ export function ContactsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Contacts</h1>
-          <p className="text-sm text-muted-foreground">{contactsData.length} contacts</p>
+          <p className="text-sm text-muted-foreground">{contacts.length} contacts</p>
         </div>
         <Button size="sm">+ Add Contact</Button>
       </div>
