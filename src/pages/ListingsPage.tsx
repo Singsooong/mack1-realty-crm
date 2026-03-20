@@ -1,11 +1,14 @@
 import { useState } from 'react'
-import { MapPin, BedDouble, Bath, Square, Search, SlidersHorizontal } from 'lucide-react'
+import { MapPin, BedDouble, Bath, Square, Search, SlidersHorizontal, MoreHorizontal } from 'lucide-react'
 import { useProperties } from '@/hooks/useProperties'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { PropertyDrawer } from '@/components/listings/PropertyDrawer'
+import { DeleteConfirmDialog } from '@/components/listings/DeleteConfirmDialog'
 import type { Property } from '@/types'
 
 const STATUS_STYLES: Record<Property['status'], string> = {
@@ -15,9 +18,32 @@ const STATUS_STYLES: Record<Property['status'], string> = {
 }
 
 export function ListingsPage() {
-  const { properties, loading, error } = useProperties()
+  const { properties, loading, error, createProperty, updateProperty, deleteProperty } = useProperties()
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null)
+  const [deletingProperty, setDeletingProperty] = useState<Property | null>(null)
+
+  function handleDrawerClose() {
+    setDrawerOpen(false)
+    setEditingProperty(null)
+  }
+
+  async function handleSave(id: string | null, data: Omit<Property, 'id'>) {
+    if (id === null) {
+      await createProperty(data)
+    } else {
+      await updateProperty(id, data)
+    }
+    handleDrawerClose()
+  }
+
+  async function handleDelete() {
+    if (!deletingProperty) return
+    await deleteProperty(deletingProperty.id)
+    setDeletingProperty(null)
+  }
 
   if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading listings…</div>
   if (error) return <div className="p-6 text-sm text-destructive">Error: {error}</div>
@@ -36,7 +62,9 @@ export function ListingsPage() {
           <h1 className="text-2xl font-bold text-foreground">Listings</h1>
           <p className="text-sm text-muted-foreground">{properties.length} total properties</p>
         </div>
-        <Button size="sm">+ Add Listing</Button>
+        <Button size="sm" onClick={() => { setEditingProperty(null); setDrawerOpen(true) }}>
+          + Add Listing
+        </Button>
       </div>
 
       {/* Filters */}
@@ -62,10 +90,30 @@ export function ListingsPage() {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(property => (
-          <Card key={property.id} className="overflow-hidden hover:border-border transition-colors cursor-pointer group">
+          <Card key={property.id} className="overflow-hidden hover:border-border transition-colors group">
             <div className="relative h-48 overflow-hidden -mt-4">
               <img src={property.imageUrl} alt={property.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               <Badge className={`absolute bottom-3 left-3 capitalize ${STATUS_STYLES[property.status]}`}>{property.status}</Badge>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 h-7 w-7 bg-black/50 hover:bg-black/70 text-white z-10"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => { setEditingProperty(property); setDrawerOpen(true) }}>
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-destructive" onClick={() => setDeletingProperty(property)}>
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2 gap-2">
@@ -85,6 +133,18 @@ export function ListingsPage() {
           </Card>
         ))}
       </div>
+
+      <PropertyDrawer
+        open={drawerOpen}
+        onClose={handleDrawerClose}
+        property={editingProperty}
+        onSave={handleSave}
+      />
+      <DeleteConfirmDialog
+        property={deletingProperty}
+        onConfirm={handleDelete}
+        onCancel={() => setDeletingProperty(null)}
+      />
     </div>
   )
 }
