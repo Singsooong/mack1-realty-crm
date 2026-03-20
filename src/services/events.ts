@@ -78,3 +78,8 @@ export async function updateEvent(id: string, updates: Partial<Omit<CalendarEven
   const { error } = await supabase.from('calendar_events').update(dbUpdates).eq('id', id)
   if (error) throw new Error(error.message)
 }
+
+export async function deleteEvent(id: string): Promise<void> {
+  const { error } = await supabase.from('calendar_events').delete().eq('id', id)
+  if (error) throw new Error(error.message)
+}
