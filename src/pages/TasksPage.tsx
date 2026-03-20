@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { tasksData } from '@/lib/mock-data'
+import { useTasks } from '@/hooks/useTasks'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -24,8 +23,11 @@ const CATEGORY_STYLES: Record<Task['category'], string> = {
 }
 
 export function TasksPage() {
-  const [tasks, setTasks] = useState(tasksData)
-  const toggle = (id: string) => setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t))
+  const { tasks, loading, error, toggleTaskComplete } = useTasks()
+
+  if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading tasks…</div>
+  if (error) return <div className="p-6 text-sm text-destructive">Error: {error}</div>
+
   const pending = tasks.filter(t => !t.completed)
   const completed = tasks.filter(t => t.completed)
 
@@ -49,7 +51,7 @@ export function TasksPage() {
                   <div key={task.id}>
                     {i > 0 && <Separator />}
                     <div className="flex items-start gap-3 py-3 hover:bg-muted/20 rounded-md px-2 -mx-2 transition-colors">
-                      <Checkbox checked={task.completed} onCheckedChange={() => toggle(task.id)} className="mt-0.5" />
+                      <Checkbox checked={task.completed} onCheckedChange={() => toggleTaskComplete(task.id)} className="mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap mb-1">
                           <p className="text-sm font-medium text-foreground">{task.title}</p>
@@ -77,7 +79,7 @@ export function TasksPage() {
                   <div key={task.id}>
                     {i > 0 && <Separator />}
                     <div className="flex items-start gap-3 py-3 hover:bg-muted/20 rounded-md px-2 -mx-2 transition-colors opacity-50">
-                      <Checkbox checked={task.completed} onCheckedChange={() => toggle(task.id)} className="mt-0.5" />
+                      <Checkbox checked={task.completed} onCheckedChange={() => toggleTaskComplete(task.id)} className="mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <p className={cn('text-sm font-medium', task.completed && 'line-through text-muted-foreground')}>{task.title}</p>
                         <p className="text-xs text-muted-foreground mt-1">{task.description}</p>

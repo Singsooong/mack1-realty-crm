@@ -1,4 +1,4 @@
-import { leadsData } from '@/lib/mock-data'
+import { useLeads } from '@/hooks/useLeads'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -18,12 +18,17 @@ function formatDate(iso: string) {
 }
 
 export function LeadsPage() {
+  const { leads, loading, error } = useLeads()
+
+  if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading leads…</div>
+  if (error) return <div className="p-6 text-sm text-destructive">Error: {error}</div>
+
   return (
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Leads</h1>
-          <p className="text-sm text-muted-foreground">{leadsData.length} active leads</p>
+          <p className="text-sm text-muted-foreground">{leads.length} active leads</p>
         </div>
         <Button size="sm">+ New Lead</Button>
       </div>
@@ -43,7 +48,7 @@ export function LeadsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {leadsData.map(lead => (
+            {leads.map(lead => (
               <TableRow key={lead.id} className="border-border hover:bg-muted/30">
                 <TableCell className="font-semibold text-foreground text-sm whitespace-nowrap">{lead.name}</TableCell>
                 <TableCell>
