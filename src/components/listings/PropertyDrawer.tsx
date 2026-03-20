@@ -76,7 +76,7 @@ export function PropertyDrawer({ open, onClose, property, onSave }: PropertyDraw
   }
 
   return (
-    <Sheet open={open} onOpenChange={(v) => { if (!v) onClose() }}>
+    <Sheet open={open} onOpenChange={(v) => { if (!v && !loading) onClose() }}>
       <SheetContent className="w-[400px] sm:w-[480px] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>{property ? 'Edit Listing' : 'Add Listing'}</SheetTitle>
