@@ -50,9 +50,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authLoading, setAuthLoading] = useState(true)
 
   useEffect(() => {
-    // onAuthStateChange fires immediately with INITIAL_SESSION on mount,
-    // covering both the "restore from localStorage" case and "no session" case.
-    // No separate getSession() call needed — avoids a double-fetch race condition.
+    // getSession() handles the initial load. React Strict Mode runs effects twice,
+    // so INITIAL_SESSION from onAuthStateChange fires only on the first mount and
+    // is lost on the second — getSession() is a plain promise and is not affected.
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user)
+        const agent = await fetchAgentRecord(session.user.id)
+        setAgentRecord(agent)
+      }
+      setAuthLoading(false)
+    })
+
+    // onAuthStateChange handles sign-in / sign-out after initial load.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
         setUser(session.user)
@@ -62,7 +72,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null)
         setAgentRecord(null)
       }
-      setAuthLoading(false)
     })
 
     return () => subscription.unsubscribe()
