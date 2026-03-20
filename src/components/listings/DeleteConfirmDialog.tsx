@@ -41,7 +41,7 @@ export function DeleteConfirmDialog({ property, onConfirm, onCancel }: DeleteCon
   }
 
   return (
-    <Dialog open={!!property} onOpenChange={(v) => { if (!v) onCancel() }}>
+    <Dialog open={!!property} onOpenChange={(v) => { if (!v && !loading) onCancel() }}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Listing</DialogTitle>
