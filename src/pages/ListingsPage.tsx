@@ -109,7 +109,7 @@ export function ListingsPage() {
                   <DropdownMenuItem onClick={() => { setEditingProperty(property); setDrawerOpen(true) }}>
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="text-destructive" onClick={() => setDeletingProperty(property)}>
+                  <DropdownMenuItem variant="destructive" onClick={() => setDeletingProperty(property)}>
                     Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>

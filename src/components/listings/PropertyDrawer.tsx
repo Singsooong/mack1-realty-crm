@@ -127,6 +127,7 @@ export function PropertyDrawer({ open, onClose, property, onSave }: PropertyDraw
               <Input
                 type="number"
                 min={0}
+                step={1}
                 value={beds}
                 onChange={e => setBeds(Number(e.target.value))}
                 required
@@ -137,6 +138,7 @@ export function PropertyDrawer({ open, onClose, property, onSave }: PropertyDraw
               <Input
                 type="number"
                 min={0}
+                step={1}
                 value={baths}
                 onChange={e => setBaths(Number(e.target.value))}
                 required
@@ -147,6 +149,7 @@ export function PropertyDrawer({ open, onClose, property, onSave }: PropertyDraw
               <Input
                 type="number"
                 min={1}
+                step={1}
                 value={sqft}
                 onChange={e => setSqft(Number(e.target.value))}
                 required
