@@ -2,23 +2,19 @@ import { leadsData } from '@/lib/mock-data'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { MoreHorizontal } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import type { Lead } from '@/types'
 
-const STAGE_STYLES: Record<Lead['stage'], string> = {
+const STATUS_STYLES: Record<Lead['status'], string> = {
   new: 'bg-muted text-muted-foreground',
-  contacted: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
-  qualified: 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-400',
-  proposal: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400',
-  closed: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
+  contacted: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400',
+  qualified: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
+  converted: 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-400',
+  lost: 'bg-red-100 text-red-600 dark:bg-red-950 dark:text-red-400',
 }
 
-const SOURCE_STYLES: Record<Lead['source'], string> = {
-  website: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-400',
-  referral: 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-400',
-  social: 'bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-400',
-  ads: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-400',
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 export function LeadsPage() {
@@ -36,40 +32,45 @@ export function LeadsPage() {
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border">
-              <TableHead>Lead</TableHead>
-              <TableHead>Source</TableHead>
-              <TableHead>Stage</TableHead>
-              <TableHead>Value</TableHead>
-              <TableHead>Probability</TableHead>
-              <TableHead>Assigned To</TableHead>
-              <TableHead className="w-10" />
+              <TableHead>Name</TableHead>
+              <TableHead>Contact Info</TableHead>
+              <TableHead>Property Interest</TableHead>
+              <TableHead>Message</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Assigned Agent</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead className="w-24" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {leadsData.map(lead => (
               <TableRow key={lead.id} className="border-border hover:bg-muted/30">
+                <TableCell className="font-semibold text-foreground text-sm whitespace-nowrap">{lead.name}</TableCell>
                 <TableCell>
                   <div>
-                    <p className="font-medium text-foreground text-sm">{lead.name}</p>
-                    <p className="text-xs text-muted-foreground">{lead.email}</p>
+                    <p className="text-sm text-muted-foreground">{lead.email}</p>
+                    <p className="text-sm text-muted-foreground">{lead.phone}</p>
                   </div>
                 </TableCell>
-                <TableCell>
-                  <Badge className={`capitalize ${SOURCE_STYLES[lead.source]}`}>{lead.source}</Badge>
+                <TableCell className="text-sm text-muted-foreground whitespace-nowrap">{lead.propertyInterest}</TableCell>
+                <TableCell className="text-sm text-muted-foreground max-w-[200px]">
+                  <span className="line-clamp-1">{lead.message}</span>
                 </TableCell>
                 <TableCell>
-                  <Badge className={`capitalize ${STAGE_STYLES[lead.stage]}`}>{lead.stage}</Badge>
+                  <Badge className={`capitalize ${STATUS_STYLES[lead.status]}`}>{lead.status}</Badge>
                 </TableCell>
-                <TableCell className="text-sm font-medium text-foreground">${lead.value.toLocaleString()}</TableCell>
+                <TableCell className="text-sm font-medium text-foreground whitespace-nowrap">{lead.assignedAgentName}</TableCell>
+                <TableCell className="text-sm text-muted-foreground whitespace-nowrap">{formatDate(lead.date)}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2 min-w-[80px]">
-                    <Progress value={lead.probability} className="h-1.5 flex-1" />
-                    <span className="text-xs text-muted-foreground w-8">{lead.probability}%</span>
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground hover:text-foreground gap-1">
+                      <Pencil className="h-3.5 w-3.5" />
+                      Edit
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10">
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
                   </div>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">{lead.assignedTo}</TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="icon" className="h-8 w-8"><MoreHorizontal className="h-4 w-4" /></Button>
                 </TableCell>
               </TableRow>
             ))}

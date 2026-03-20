@@ -59,7 +59,7 @@ export function TasksPage() {
                         <p className="text-xs text-muted-foreground mb-2">{task.description}</p>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                          <span className="flex items-center gap-1"><User className="h-3 w-3" />{task.assignedTo}</span>
+                          <span className="flex items-center gap-1"><User className="h-3 w-3" />{task.assignedAgentName}</span>
                         </div>
                       </div>
                     </div>

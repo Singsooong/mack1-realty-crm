@@ -58,6 +58,7 @@ export interface Agent {
   revenue: string
   rating: number
   status: 'active' | 'inactive'
+  role: 'admin' | 'agent'          // NEW
 }
 
 export interface Contact {
@@ -75,12 +76,13 @@ export interface Lead {
   id: string
   name: string
   email: string
-  source: 'website' | 'referral' | 'social' | 'ads'
-  stage: 'new' | 'contacted' | 'qualified' | 'proposal' | 'closed'
-  value: number
-  probability: number
-  assignedTo: string
-  createdAt: string
+  phone: string
+  propertyInterest: string
+  message: string
+  status: 'new' | 'contacted' | 'qualified' | 'converted' | 'lost'
+  assignedAgentId: string          // was: assignedTo: string
+  assignedAgentName: string        // NEW — resolved via join
+  date: string
 }
 
 export interface Task {
@@ -91,7 +93,8 @@ export interface Task {
   priority: 'low' | 'medium' | 'high'
   completed: boolean
   dueDate: string
-  assignedTo: string
+  assignedAgentId: string          // was: assignedTo: string
+  assignedAgentName: string        // NEW — resolved via join
 }
 
 export interface CalendarEvent {
@@ -101,7 +104,8 @@ export interface CalendarEvent {
   time: string
   type: 'showing' | 'meeting' | 'inspection' | 'closing'
   location: string
-  attendees: string[]
+  attendeeIds: string[]            // NEW — uuid[] from DB
+  attendees: string[]              // kept for display (names)
 }
 
 export interface Document {
