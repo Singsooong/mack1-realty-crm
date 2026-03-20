@@ -65,6 +65,9 @@ export async function updateProperty(id: string, updates: Partial<Omit<Property,
   if (updates.price !== undefined) dbUpdates.price = updates.price
   if (updates.status !== undefined) dbUpdates.status = updates.status
   if (updates.imageUrl !== undefined) dbUpdates.image_url = updates.imageUrl
+  if (updates.beds  !== undefined) dbUpdates.beds  = updates.beds
+  if (updates.baths !== undefined) dbUpdates.baths = updates.baths
+  if (updates.sqft  !== undefined) dbUpdates.sqft  = updates.sqft
   const { error } = await supabase.from('properties').update(dbUpdates).eq('id', id)
   if (error) throw new Error(error.message)
 }
