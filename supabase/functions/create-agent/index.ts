@@ -30,19 +30,26 @@ Deno.serve(async (req) => {
     { global: { headers: { Authorization: authHeader } } },
   )
 
-  const { data: { user } } = await supabaseUser.auth.getUser()
-  if (!user) {
+  const { data: { user }, error: userError } = await supabaseUser.auth.getUser()
+  if (userError || !user) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 
-  const { data: callerAgent } = await supabaseAdmin
+  const { data: callerAgent, error: callerError } = await supabaseAdmin
     .from('agents')
     .select('role')
     .eq('user_id', user.id)
     .single()
+
+  if (callerError) {
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
 
   if (callerAgent?.role !== 'admin') {
     return new Response(JSON.stringify({ error: 'Forbidden' }), {
@@ -52,7 +59,16 @@ Deno.serve(async (req) => {
   }
 
   // Parse request body
-  const { name, email, phone, specialty, status, role, avatar_url } = await req.json()
+  let body: { name?: string; email?: string; phone?: string; specialty?: string; status?: string; role?: string; avatar_url?: string }
+  try {
+    body = await req.json()
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+  const { name, email, phone, specialty, status, role, avatar_url } = body
 
   if (!name || !email) {
     return new Response(JSON.stringify({ error: 'name and email are required' }), {
@@ -97,7 +113,10 @@ Deno.serve(async (req) => {
 
   if (agentError) {
     // Rollback: remove the auth user so it doesn't become orphaned
-    await supabaseAdmin.auth.admin.deleteUser(authData.user.id)
+    const { error: rollbackError } = await supabaseAdmin.auth.admin.deleteUser(authData.user.id)
+    if (rollbackError) {
+      console.error('Rollback failed — orphaned auth user:', authData.user.id, rollbackError.message)
+    }
     return new Response(JSON.stringify({ error: agentError.message }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
