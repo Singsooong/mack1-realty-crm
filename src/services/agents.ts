@@ -1,3 +1,4 @@
+import { FunctionsHttpError } from '@supabase/functions-js'
 import { supabase } from '../lib/supabase'
 import type { Agent } from '../types'
 
@@ -6,9 +7,9 @@ interface RawAgent {
   user_id: string | null
   name: string
   email: string
-  phone: string
-  avatar_url: string
-  specialty: string
+  phone: string | null
+  avatar_url: string | null
+  specialty: string | null
   listings: number
   sales: number
   revenue: string
@@ -34,6 +35,18 @@ function transformAgent(row: RawAgent): Agent {
   }
 }
 
+async function invokeFunctionOrThrow(fnName: string, body: object): Promise<unknown> {
+  const { data, error } = await supabase.functions.invoke(fnName, { body })
+  if (error) {
+    if (error instanceof FunctionsHttpError) {
+      const errBody = await error.context.json().catch(() => null)
+      throw new Error(errBody?.error ?? error.message)
+    }
+    throw new Error(error.message)
+  }
+  return data
+}
+
 export async function fetchAgents(): Promise<Agent[]> {
   const { data, error } = await supabase
     .from('agents')
@@ -47,9 +60,9 @@ export async function updateAgent(id: string, updates: Partial<Omit<Agent, 'id'>
   const dbUpdates: Partial<RawAgent> = {}
   if (updates.name !== undefined) dbUpdates.name = updates.name
   if (updates.email !== undefined) dbUpdates.email = updates.email
-  if (updates.phone !== undefined) dbUpdates.phone = updates.phone
-  if (updates.avatarUrl !== undefined) dbUpdates.avatar_url = updates.avatarUrl
-  if (updates.specialty !== undefined) dbUpdates.specialty = updates.specialty
+  if (updates.phone !== undefined) dbUpdates.phone = updates.phone || null
+  if (updates.avatarUrl !== undefined) dbUpdates.avatar_url = updates.avatarUrl || null
+  if (updates.specialty !== undefined) dbUpdates.specialty = updates.specialty || null
   if (updates.status !== undefined) dbUpdates.status = updates.status
   if (updates.role !== undefined) dbUpdates.role = updates.role
   const { error } = await supabase.from('agents').update(dbUpdates).eq('id', id)
@@ -59,24 +72,18 @@ export async function updateAgent(id: string, updates: Partial<Omit<Agent, 'id'>
 export async function createAgent(
   data: Pick<Agent, 'name' | 'email' | 'phone' | 'avatarUrl' | 'specialty' | 'status' | 'role'>
 ): Promise<Agent> {
-  const { data: result, error } = await supabase.functions.invoke('create-agent', {
-    body: {
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      specialty: data.specialty,
-      status: data.status,
-      role: data.role,
-      avatar_url: data.avatarUrl,
-    },
+  const result = await invokeFunctionOrThrow('create-agent', {
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    specialty: data.specialty,
+    status: data.status,
+    role: data.role,
+    avatar_url: data.avatarUrl,
   })
-  if (error) throw new Error(error.message)
   return transformAgent(result as RawAgent)
 }
 
 export async function deleteAgent(id: string): Promise<void> {
-  const { error } = await supabase.functions.invoke('delete-agent', {
-    body: { agentId: id },
-  })
-  if (error) throw new Error(error.message)
+  await invokeFunctionOrThrow('delete-agent', { agentId: id })
 }
