@@ -84,8 +84,16 @@ Deno.serve(async (req) => {
     .single()
 
   if (fetchError) {
-    return new Response(JSON.stringify({ error: fetchError.message }), {
+    console.error('Fetch agent error:', fetchError.message)
+    return new Response(JSON.stringify({ error: 'Agent not found' }), {
       status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  if (!agent) {
+    return new Response(JSON.stringify({ error: 'Agent not found' }), {
+      status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
@@ -97,7 +105,8 @@ Deno.serve(async (req) => {
     .eq('id', agentId)
 
   if (deleteError) {
-    return new Response(JSON.stringify({ error: deleteError.message }), {
+    console.error('Delete agent error:', deleteError.message)
+    return new Response(JSON.stringify({ error: 'Failed to delete agent' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
