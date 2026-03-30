@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react'
-import { fetchAgents, updateAgent } from '../services/agents'
+import {
+  fetchAgents,
+  updateAgent,
+  createAgent as createAgentService,
+  deleteAgent as deleteAgentService,
+} from '../services/agents'
 import type { Agent } from '../types'
 
 export function useAgents() {
@@ -19,5 +24,24 @@ export function useAgents() {
     setAgents(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a))
   }
 
-  return { agents, loading, error, updateAgent: handleUpdateAgent }
+  async function handleCreateAgent(
+    data: Pick<Agent, 'name' | 'email' | 'phone' | 'avatarUrl' | 'specialty' | 'status' | 'role'>
+  ) {
+    const newAgent = await createAgentService(data)
+    setAgents(prev => [...prev, newAgent].sort((a, b) => a.name.localeCompare(b.name)))
+  }
+
+  async function handleDeleteAgent(id: string) {
+    await deleteAgentService(id)
+    setAgents(prev => prev.filter(a => a.id !== id))
+  }
+
+  return {
+    agents,
+    loading,
+    error,
+    updateAgent: handleUpdateAgent,
+    createAgent: handleCreateAgent,
+    deleteAgent: handleDeleteAgent,
+  }
 }
