@@ -55,3 +55,28 @@ export async function updateAgent(id: string, updates: Partial<Omit<Agent, 'id'>
   const { error } = await supabase.from('agents').update(dbUpdates).eq('id', id)
   if (error) throw new Error(error.message)
 }
+
+export async function createAgent(
+  data: Pick<Agent, 'name' | 'email' | 'phone' | 'avatarUrl' | 'specialty' | 'status' | 'role'>
+): Promise<Agent> {
+  const { data: result, error } = await supabase.functions.invoke('create-agent', {
+    body: {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      specialty: data.specialty,
+      status: data.status,
+      role: data.role,
+      avatar_url: data.avatarUrl,
+    },
+  })
+  if (error) throw new Error(error.message)
+  return transformAgent(result as RawAgent)
+}
+
+export async function deleteAgent(id: string): Promise<void> {
+  const { error } = await supabase.functions.invoke('delete-agent', {
+    body: { agentId: id },
+  })
+  if (error) throw new Error(error.message)
+}
