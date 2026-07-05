@@ -3,6 +3,7 @@ import { AppLayout } from '@/components/shared/AppLayout'
 import { PageRouter } from '@/components/shared/PageRouter'
 import { ThemeProvider } from '@/lib/theme'
 import { AuthProvider, ProtectedRoute } from '@/context/AuthContext'
+import { Toaster } from 'sonner'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           </ProtectedRoute>
         </RouterProvider>
       </AuthProvider>
+      <Toaster richColors position="top-right" />
     </ThemeProvider>
   )
 }

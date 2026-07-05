@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetchEvents, createEvent, updateEvent, deleteEvent } from '../services/events'
+import { fetchEvents, createEvent, deleteEvent } from '../services/events'
 import type { CalendarEvent } from '../types'
 
 export function useEvents() {

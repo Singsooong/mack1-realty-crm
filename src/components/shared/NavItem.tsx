@@ -17,7 +17,7 @@ export function NavItem({ icon: Icon, label, isActive, isCollapsed, onClick }: N
       variant="ghost"
       size={isCollapsed ? 'icon' : 'default'}
       className={cn(
-        'w-full transition-all',
+        'w-full transition-all h-10 px-3',
         !isCollapsed && 'justify-start gap-3',
         isActive
           ? 'bg-foreground/10 text-foreground font-semibold hover:bg-foreground/10'
@@ -25,7 +25,7 @@ export function NavItem({ icon: Icon, label, isActive, isCollapsed, onClick }: N
       )}
       onClick={onClick}
     >
-      <Icon className="h-4 w-4 shrink-0" />
+      <Icon className="h-5 w-5 shrink-0" />
       {!isCollapsed && <span>{label}</span>}
     </Button>
   )

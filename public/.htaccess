@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Serve real files/directories (hashed JS/CSS, images) as-is
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else is a client-side route -> let React Router handle it
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# index.html must always be revalidated so deploys aren't served stale
+# (it references content-hashed JS/CSS chunk names that change per build)
+<IfModule mod_headers.c>
+  <Files "index.html">
+    Header set Cache-Control "no-cache"
+  </Files>
+</IfModule>

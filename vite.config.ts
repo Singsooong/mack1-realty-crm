@@ -10,4 +10,23 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-pdf': ['pdfjs-dist'],
+          'vendor-charts': ['recharts'],
+          'vendor-ui': ['radix-ui', 'class-variance-authority'],
+          'vendor-dnd': ['@hello-pangea/dnd'],
+          'vendor-core': ['react', 'react-dom'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
+  server: {
+    port: 5174,
+    strictPort: true,
+    open: true,
+  },
 })

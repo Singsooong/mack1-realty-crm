@@ -11,6 +11,7 @@ interface RawAgent {
   avatar_url: string | null
   specialty: string | null
   listings: number
+  listings_count?: number
   sales: number
   revenue: string
   rating: number
@@ -26,7 +27,7 @@ function transformAgent(row: RawAgent): Agent {
     phone: row.phone ?? '',
     avatarUrl: row.avatar_url ?? '',
     specialty: row.specialty ?? '',
-    listings: row.listings,
+    listings: row.listings_count ?? row.listings,
     sales: row.sales,
     revenue: row.revenue,
     rating: row.rating,
@@ -49,7 +50,7 @@ async function invokeFunctionOrThrow(fnName: string, body: object): Promise<unkn
 
 export async function fetchAgents(): Promise<Agent[]> {
   const { data, error } = await supabase
-    .from('agents')
+    .from('agents_with_counts')
     .select('*')
     .order('name')
   if (error) throw new Error(error.message)
@@ -70,8 +71,9 @@ export async function updateAgent(id: string, updates: Partial<Omit<Agent, 'id'>
 }
 
 export async function createAgent(
-  data: Pick<Agent, 'name' | 'email' | 'phone' | 'avatarUrl' | 'specialty' | 'status' | 'role'>
-): Promise<Agent> {
+  data: Pick<Agent, 'name' | 'email' | 'phone' | 'avatarUrl' | 'specialty' | 'status' | 'role'>,
+  password?: string
+): Promise<{ agent: Agent; password: string }> {
   const result = await invokeFunctionOrThrow('create-agent', {
     name: data.name,
     email: data.email,
@@ -80,10 +82,45 @@ export async function createAgent(
     status: data.status,
     role: data.role,
     avatar_url: data.avatarUrl,
+    password,
   })
-  return transformAgent(result as RawAgent)
+
+  console.log('create-agent response:', result)
+
+  const { password: returnedPassword, ...agentData } = result as RawAgent & { password: string }
+
+  if (!returnedPassword) {
+    console.warn('Password not found in create-agent response', { responseKeys: Object.keys(result as object) })
+  }
+
+  return {
+    agent: transformAgent(agentData as RawAgent),
+    password: returnedPassword || '',
+  }
 }
 
 export async function deleteAgent(id: string): Promise<void> {
   await invokeFunctionOrThrow('delete-agent', { agentId: id })
+}
+
+export async function uploadAgentAvatar(file: File): Promise<string> {
+  const ext = file.name.split('.').pop() ?? 'jpg'
+  const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const { error } = await supabase.storage
+    .from('agent-avatars')
+    .upload(path, file, { upsert: false })
+  if (error) throw new Error(`Avatar upload failed: ${error.message}`)
+  const { data } = supabase.storage.from('agent-avatars').getPublicUrl(path)
+  return data.publicUrl
+}
+
+export async function resetAgentPassword(
+  agentId: string,
+  newPassword: string
+): Promise<{ password: string }> {
+  const result = await invokeFunctionOrThrow('reset-agent-password', {
+    agentId,
+    password: newPassword,
+  })
+  return result as { password: string }
 }

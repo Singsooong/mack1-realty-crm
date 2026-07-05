@@ -1,9 +1,25 @@
+import { useState } from 'react'
+import { toast } from 'sonner'
 import { useLeads } from '@/hooks/useLeads'
+import { useAgents } from '@/hooks/useAgents'
+import { usePagination } from '@/hooks/usePagination'
+import { TablePagination } from '@/components/shared/TablePagination'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Pencil, Trash2 } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { MoreHorizontal } from 'lucide-react'
+import { LeadDrawer } from '@/components/leads/LeadDrawer'
+import { DeleteLeadDialog } from '@/components/leads/DeleteLeadDialog'
+import { LeadsPageSkeleton } from '@/components/leads/LeadsPageSkeleton'
 import type { Lead } from '@/types'
+
+type LeadFormData = Omit<Lead, 'id' | 'assignedAgentName'>
 
 const STATUS_STYLES: Record<Lead['status'], string> = {
   new: 'bg-muted text-muted-foreground',
@@ -18,19 +34,48 @@ function formatDate(iso: string) {
 }
 
 export function LeadsPage() {
-  const { leads, loading, error } = useLeads()
+  const { leads, loading, error, createLead, updateLead, deleteLead } = useLeads()
+  const { agents } = useAgents()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [editingLead, setEditingLead] = useState<Lead | null>(null)
+  const [deletingLead, setDeletingLead] = useState<Lead | null>(null)
+  const { page, pageCount, pageItems, total, pageSize, next, prev } = usePagination(leads)
 
-  if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading leads…</div>
+  function handleDrawerClose() {
+    setDrawerOpen(false)
+    setEditingLead(null)
+  }
+
+  async function handleSave(id: string | null, data: LeadFormData) {
+    if (id === null) {
+      await createLead(data)
+    } else {
+      await updateLead(id, data)
+    }
+    toast.success(id === null ? 'Lead added' : 'Lead updated')
+    handleDrawerClose()
+  }
+
+  async function handleDelete() {
+    if (!deletingLead) return
+    await deleteLead(deletingLead.id)
+    toast.success('Lead deleted')
+    setDeletingLead(null)
+  }
+
+  if (loading) return <LeadsPageSkeleton />
   if (error) return <div className="p-6 text-sm text-destructive">Error: {error}</div>
 
   return (
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Leads</h1>
+          <h1 className="text-heading-xl text-foreground">Leads</h1>
           <p className="text-sm text-muted-foreground">{leads.length} active leads</p>
         </div>
-        <Button size="sm">+ New Lead</Button>
+        <Button onClick={() => { setEditingLead(null); setDrawerOpen(true) }}>
+          + New Lead
+        </Button>
       </div>
 
       <div className="rounded-lg border border-border overflow-hidden">
@@ -44,11 +89,11 @@ export function LeadsPage() {
               <TableHead>Status</TableHead>
               <TableHead>Assigned Agent</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="w-24" />
+              <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
           <TableBody>
-            {leads.map(lead => (
+            {pageItems.map(lead => (
               <TableRow key={lead.id} className="border-border hover:bg-muted/30">
                 <TableCell className="font-semibold text-foreground text-sm whitespace-nowrap">{lead.name}</TableCell>
                 <TableCell>
@@ -67,21 +112,48 @@ export function LeadsPage() {
                 <TableCell className="text-sm font-medium text-foreground whitespace-nowrap">{lead.assignedAgentName}</TableCell>
                 <TableCell className="text-sm text-muted-foreground whitespace-nowrap">{formatDate(lead.date)}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground hover:text-foreground gap-1">
-                      <Pencil className="h-3.5 w-3.5" />
-                      Edit
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive hover:bg-destructive/10">
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => { setEditingLead(lead); setDrawerOpen(true) }}>
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem variant="destructive" onClick={() => setDeletingLead(lead)}>
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          page={page}
+          pageCount={pageCount}
+          total={total}
+          pageSize={pageSize}
+          onPrev={prev}
+          onNext={next}
+        />
       </div>
+
+      <LeadDrawer
+        open={drawerOpen}
+        onClose={handleDrawerClose}
+        lead={editingLead}
+        agents={agents}
+        onSave={handleSave}
+      />
+      <DeleteLeadDialog
+        lead={deletingLead}
+        onConfirm={handleDelete}
+        onCancel={() => setDeletingLead(null)}
+      />
     </div>
   )
 }

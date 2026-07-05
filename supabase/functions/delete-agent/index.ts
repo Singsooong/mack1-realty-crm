@@ -98,14 +98,6 @@ Deno.serve(async (req) => {
     })
   }
 
-  // Prevent admin from deleting their own account
-  if (agent.user_id === user.id) {
-    return new Response(JSON.stringify({ error: 'You cannot delete your own account' }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
-  }
-
   // Delete agents row first
   const { error: deleteError } = await supabaseAdmin
     .from('agents')

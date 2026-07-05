@@ -1,0 +1,76 @@
+<h2>How should Edit / Delete appear on the card?</h2>
+<p class="subtitle">What controls does each property card expose?</p>
+
+<div class="cards">
+  <div class="card" data-choice="hover-icons" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0f0f0f;">
+      <div style="background:#1a1a1a;border:1px solid #333;border-radius:8px;overflow:hidden;position:relative;">
+        <div style="height:72px;background:linear-gradient(135deg,#2a2a2a,#1a1a1a);display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:11px;color:#555;">photo</span>
+          <!-- Hover icons top-right -->
+          <div style="position:absolute;top:8px;right:8px;display:flex;gap:4px;">
+            <div style="background:rgba(0,0,0,0.7);border-radius:5px;padding:4px 6px;font-size:10px;color:#ccc;">✏️</div>
+            <div style="background:rgba(0,0,0,0.7);border-radius:5px;padding:4px 6px;font-size:10px;color:#f87171;">🗑</div>
+          </div>
+        </div>
+        <div style="padding:10px;font-size:10px;color:#aaa;">
+          <div style="font-weight:600;color:#fff;margin-bottom:4px;">Sunset Villa</div>
+          <div style="color:#888;">Phoenix, AZ · $3,200/mo</div>
+          <div style="color:#888;margin-top:4px;">3 bd · 2 ba · 1,800 sqft</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Icon buttons on image</h3>
+      <p>Edit (pencil) and delete (trash) icons float over the photo, always visible. Clean, minimal footprint.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="bottom-buttons" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0f0f0f;">
+      <div style="background:#1a1a1a;border:1px solid #333;border-radius:8px;overflow:hidden;">
+        <div style="height:72px;background:linear-gradient(135deg,#2a2a2a,#1a1a1a);display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:11px;color:#555;">photo</span>
+        </div>
+        <div style="padding:10px;font-size:10px;color:#aaa;">
+          <div style="font-weight:600;color:#fff;margin-bottom:4px;">Sunset Villa</div>
+          <div style="color:#888;">Phoenix, AZ · $3,200/mo</div>
+          <div style="color:#888;margin-top:4px;">3 bd · 2 ba · 1,800 sqft</div>
+          <div style="display:flex;gap:5px;margin-top:8px;border-top:1px solid #333;padding-top:8px;">
+            <div style="flex:1;background:#252525;border-radius:4px;padding:4px;text-align:center;font-size:9px;color:#ccc;">Edit</div>
+            <div style="background:#3f1a1a;border-radius:4px;padding:4px 8px;font-size:9px;color:#f87171;">Delete</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Buttons at card bottom</h3>
+      <p>Edit and Delete buttons sit in a footer row below the property details. Always visible, clearly labeled.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="kebab-menu" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0f0f0f;">
+      <div style="background:#1a1a1a;border:1px solid #333;border-radius:8px;overflow:hidden;position:relative;">
+        <div style="height:72px;background:linear-gradient(135deg,#2a2a2a,#1a1a1a);display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:11px;color:#555;">photo</span>
+          <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.7);border-radius:5px;padding:4px 7px;font-size:11px;color:#ccc;">⋯</div>
+        </div>
+        <div style="padding:10px;font-size:10px;color:#aaa;">
+          <div style="font-weight:600;color:#fff;margin-bottom:4px;">Sunset Villa</div>
+          <div style="color:#888;">Phoenix, AZ · $3,200/mo</div>
+          <div style="color:#888;margin-top:4px;">3 bd · 2 ba · 1,800 sqft</div>
+        </div>
+        <!-- Dropdown menu -->
+        <div style="position:absolute;top:28px;right:8px;background:#2a2a2a;border:1px solid #444;border-radius:6px;padding:4px;font-size:10px;color:#ccc;min-width:80px;box-shadow:0 4px 12px rgba(0,0,0,0.5);">
+          <div style="padding:4px 8px;border-radius:3px;">✏️ Edit</div>
+          <div style="padding:4px 8px;border-radius:3px;color:#f87171;">🗑 Delete</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Kebab (⋯) menu</h3>
+      <p>A single ⋯ button on hover reveals a dropdown with Edit and Delete. Keeps the card clean; one extra click.</p>
+    </div>
+  </div>
+</div>

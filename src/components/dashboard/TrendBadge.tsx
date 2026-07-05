@@ -1,5 +1,4 @@
 import { TrendingUp, TrendingDown } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 interface TrendBadgeProps {
@@ -8,20 +7,21 @@ interface TrendBadgeProps {
 }
 
 export function TrendBadge({ value, direction }: TrendBadgeProps) {
+  const Icon = direction === 'up' ? TrendingUp : TrendingDown
   return (
-    <Badge
-      variant="secondary"
+    <span
       className={cn(
-        'gap-1 text-xs font-semibold',
+        'inline-flex items-center gap-1 text-xs font-medium',
+        // Nike: the only non-neutral chrome colors are success (#007d48, up) and
+        // sale (#d30005, down), rendered as TEXT with no container — the system's
+        // only container-less "badge". Brighter variants on dark surfaces.
         direction === 'up'
-          ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-400 dark:hover:bg-emerald-950'
-          : 'bg-red-100 text-red-700 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-950',
+          ? 'text-[#007d48] dark:text-[#1eaa52]'
+          : 'text-[#d30005] dark:text-[#f1564a]',
       )}
     >
-      {direction === 'up'
-        ? <TrendingUp className="h-3 w-3" />
-        : <TrendingDown className="h-3 w-3" />}
+      <Icon className="h-3 w-3" />
       {value}%
-    </Badge>
+    </span>
   )
 }

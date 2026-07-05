@@ -1,14 +1,18 @@
-import { Bell, Settings, Mic, Search, Sun, Moon } from 'lucide-react'
+import { Search, Sun, Moon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { adminUser } from '@/lib/mock-data'
 import { Separator } from '@/components/ui/separator'
 import { useTheme } from '@/lib/theme'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/hooks/useAuth'
+import { NotificationBell } from '@/components/shared/NotificationBell'
 
 export function Header() {
   const { isDark, toggleTheme } = useTheme()
+  const { agentRecord } = useAuth()
+  const initials = agentRecord?.name
+    ? agentRecord.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+    : '?'
 
   return (
     <header className="flex items-center justify-between px-6 h-[72px] bg-background border-b border-border shrink-0">
@@ -18,21 +22,11 @@ export function Header() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Search properties, agents..." className="pl-9 w-72 bg-muted/40 border-border" />
         </div>
-        <Button variant="outline" size="sm" className="gap-2 rounded-full">
-          <Mic className="h-4 w-4" />
-          AI Assistant
-        </Button>
       </div>
 
       {/* Right */}
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" aria-label="Notifications">
-          <Bell className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" aria-label="Settings">
-          <Settings className="h-4 w-4" />
-        </Button>
-
+        <NotificationBell />
         {/* Theme toggle pill */}
         <button
           onClick={toggleTheme}
@@ -55,12 +49,12 @@ export function Header() {
         <Separator orientation="vertical" className="h-6 mx-1" />
         <div className="flex items-center gap-2.5">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={adminUser.avatarUrl} alt={adminUser.name} />
-            <AvatarFallback>{adminUser.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+            <AvatarImage src={agentRecord?.avatarUrl ?? undefined} alt={agentRecord?.name} />
+            <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col leading-none">
-            <span className="text-sm font-semibold text-foreground">{adminUser.name}</span>
-            <span className="text-xs text-muted-foreground">{adminUser.role}</span>
+            <span className="text-sm font-semibold text-foreground">{agentRecord?.name}</span>
+            <span className="text-xs text-muted-foreground capitalize">{agentRecord?.role}</span>
           </div>
         </div>
       </div>

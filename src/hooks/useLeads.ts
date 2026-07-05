@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetchLeads, createLead, updateLeadStatus, reassignLead } from '../services/leads'
+import { fetchLeads, createLead, updateLead, updateLeadStatus, reassignLead, deleteLead } from '../services/leads'
 import type { Lead } from '../types'
 
 export function useLeads() {
@@ -20,6 +20,12 @@ export function useLeads() {
     return created
   }
 
+  async function handleUpdateLead(id: string, data: Partial<Omit<Lead, 'id' | 'assignedAgentName'>>) {
+    const updated = await updateLead(id, data)
+    setLeads(prev => prev.map(l => l.id === id ? updated : l))
+    return updated
+  }
+
   async function handleUpdateLeadStatus(id: string, status: Lead['status']) {
     await updateLeadStatus(id, status)
     setLeads(prev => prev.map(l => l.id === id ? { ...l, status } : l))
@@ -30,5 +36,10 @@ export function useLeads() {
     setLeads(prev => prev.map(l => l.id === id ? { ...l, assignedAgentId: agentId, assignedAgentName: agentName } : l))
   }
 
-  return { leads, loading, error, createLead: handleCreateLead, updateLeadStatus: handleUpdateLeadStatus, reassignLead: handleReassignLead }
+  async function handleDeleteLead(id: string) {
+    await deleteLead(id)
+    setLeads(prev => prev.filter(l => l.id !== id))
+  }
+
+  return { leads, loading, error, createLead: handleCreateLead, updateLead: handleUpdateLead, updateLeadStatus: handleUpdateLeadStatus, reassignLead: handleReassignLead, deleteLead: handleDeleteLead }
 }

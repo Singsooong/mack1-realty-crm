@@ -1,0 +1,307 @@
+<style>
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 16px;
+  }
+  .modal-card {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1.5px solid #2a2a2a;
+    background: #0f0f0f;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .modal-card:hover {
+    border-color: #444;
+  }
+  .modal-card.selected {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.25);
+  }
+
+  /* --- Drawer shell --- */
+  .drawer {
+    background: #111;
+    padding: 0;
+    border-radius: 8px;
+    font-family: 'Geist', 'Inter', sans-serif;
+    font-size: 12px;
+  }
+
+  /* ======================== OPTION A — Accent Header ======================== */
+  .a-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #1a1a2e 100%);
+    border-bottom: 1px solid #2a2a3e;
+    padding: 16px 16px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .a-header::before {
+    content: '';
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+  }
+  .a-header-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(99,102,241,0.15);
+    border: 1px solid rgba(99,102,241,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .a-header h3 { color: #e8e8f0; font-size: 14px; font-weight: 600; margin: 0 0 2px; }
+  .a-header p { color: #6b6b80; font-size: 10px; margin: 0; }
+  .a-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .a-field label { display: block; color: #888; font-size: 10px; margin-bottom: 4px; font-weight: 500; letter-spacing: 0.02em; }
+  .a-field input, .a-field select {
+    width: 100%; box-sizing: border-box;
+    background: #1a1a1a; border: 1px solid #2d2d2d;
+    border-radius: 6px; padding: 6px 8px;
+    color: #ccc; font-size: 11px;
+  }
+  .a-field input:focus { outline: none; border-color: #4f46e5; }
+  .a-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .a-footer {
+    padding: 10px 16px;
+    border-top: 1px solid #1e1e1e;
+    display: flex; justify-content: flex-end; gap: 8px;
+  }
+  .a-btn-ghost { background: transparent; border: 1px solid #2d2d2d; color: #888; padding: 5px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; }
+  .a-btn-primary { background: #4f46e5; border: none; color: white; padding: 5px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; }
+
+  /* ======================== OPTION B — Sectioned + Icons ======================== */
+  .b-header {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid #1e1e1e;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .b-badge {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #312e81, #4338ca);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(67,56,202,0.35);
+  }
+  .b-header h3 { color: #e8e8f0; font-size: 13px; font-weight: 600; margin: 0 0 1px; }
+  .b-header p { color: #5a5a6e; font-size: 10px; margin: 0; }
+  .b-section { padding: 10px 16px; }
+  .b-section-label {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.08em;
+    color: #4f46e5; text-transform: uppercase; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .b-section-label::after {
+    content: ''; flex: 1; height: 1px; background: linear-gradient(to right, #2a2a3e, transparent);
+  }
+  .b-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .b-icon { color: #4f46e5; font-size: 12px; width: 14px; flex-shrink: 0; opacity: 0.7; }
+  .b-field-wrap { flex: 1; }
+  .b-field-wrap label { display: block; color: #666; font-size: 9px; margin-bottom: 3px; font-weight: 500; }
+  .b-field-wrap input, .b-field-wrap select {
+    width: 100%; box-sizing: border-box;
+    background: #161616; border: 1px solid #252525;
+    border-radius: 5px; padding: 5px 8px;
+    color: #bbb; font-size: 11px;
+  }
+  .b-footer {
+    padding: 10px 16px;
+    border-top: 1px solid #1e1e1e;
+    display: flex; justify-content: flex-end; gap: 8px;
+  }
+  .b-btn-ghost { background: transparent; border: 1px solid #252525; color: #666; padding: 5px 12px; border-radius: 6px; font-size: 10px; }
+  .b-btn-primary { background: linear-gradient(135deg, #4338ca, #6d28d9); border: none; color: white; padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 500; }
+
+  /* ======================== OPTION C — Grouped Cards ======================== */
+  .c-header {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .c-header-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .c-title-row { display: flex; align-items: center; gap: 8px; }
+  .c-dot { width: 8px; height: 8px; border-radius: 50%; background: #4f46e5; margin-top: 3px; flex-shrink: 0; }
+  .c-header h3 { color: #e8e8f0; font-size: 13px; font-weight: 600; margin: 0; }
+  .c-step { font-size: 9px; color: #4a4a5a; margin-top: 4px; padding-left: 16px; }
+  .c-body { padding: 10px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .c-group {
+    background: #161616; border: 1px solid #1e1e1e;
+    border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 7px;
+  }
+  .c-group-label { font-size: 9px; font-weight: 600; color: #555; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .c-field label { display: block; color: #666; font-size: 9px; margin-bottom: 3px; }
+  .c-field input, .c-field select {
+    width: 100%; box-sizing: border-box;
+    background: #1d1d1d; border: 1px solid #2a2a2a;
+    border-radius: 5px; padding: 5px 8px;
+    color: #ccc; font-size: 11px;
+  }
+  .c-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .c-footer {
+    padding: 10px 16px;
+    border-top: 1px solid #1e1e1e;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .c-step-dots { display: flex; gap: 4px; }
+  .c-step-dot { width: 5px; height: 5px; border-radius: 50%; background: #2a2a2a; }
+  .c-step-dot.active { background: #4f46e5; }
+  .c-actions { display: flex; gap: 8px; }
+  .c-btn-ghost { background: transparent; border: 1px solid #2a2a2a; color: #666; padding: 5px 12px; border-radius: 6px; font-size: 10px; }
+  .c-btn-primary { background: #4f46e5; border: none; color: white; padding: 5px 14px; border-radius: 6px; font-size: 10px; font-weight: 500; }
+
+  .tag { display: inline-flex; align-items: center; gap: 3px; background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); border-radius: 20px; font-size: 9px; padding: 2px 7px; }
+
+  .card-label {
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    background: #0a0a0a;
+    border-top: 1px solid #1e1e1e;
+  }
+  .card-desc {
+    text-align: center;
+    padding: 0 12px 10px;
+    font-size: 10px;
+    color: #555;
+    background: #0a0a0a;
+    line-height: 1.4;
+  }
+</style>
+
+<h2>Modal / Drawer Style</h2>
+<p class="subtitle">Pick a visual direction — all use your existing dark theme and Tailwind tokens</p>
+
+<div class="preview-grid">
+
+  <!-- OPTION A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content" style="padding: 0;">
+      <div class="drawer">
+        <div class="a-header">
+          <div class="a-header-icon">👤</div>
+          <h3>Add New Agent</h3>
+          <p>Fill in the details below to create an account</p>
+        </div>
+        <div class="a-body">
+          <div class="a-field"><label>FULL NAME</label><input value="Jane Smith" readonly /></div>
+          <div class="a-field"><label>EMAIL</label><input value="jane@example.com" readonly /></div>
+          <div class="a-grid">
+            <div class="a-field"><label>PHONE</label><input value="+1 (555)..." readonly /></div>
+            <div class="a-field"><label>SPECIALTY</label><input value="Residential" readonly /></div>
+          </div>
+          <div class="a-grid">
+            <div class="a-field"><label>STATUS</label><select><option>Active</option></select></div>
+            <div class="a-field"><label>ROLE</label><select><option>Agent</option></select></div>
+          </div>
+        </div>
+        <div class="a-footer">
+          <button class="a-btn-ghost">Cancel</button>
+          <button class="a-btn-primary">Save Agent</button>
+        </div>
+      </div>
+      <div class="card-label">A — Gradient Header</div>
+      <div class="card-desc">Subtle indigo gradient + glow behind the icon. Labels go ALL-CAPS. Clean and premium.</div>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content" style="padding: 0;">
+      <div class="drawer">
+        <div class="b-header">
+          <div class="b-badge">👤</div>
+          <div>
+            <h3>Add New Agent</h3>
+            <p>Create a login account for a new team member</p>
+          </div>
+        </div>
+        <div class="b-section">
+          <div class="b-section-label">Profile</div>
+          <div class="b-row">
+            <span class="b-icon">✦</span>
+            <div class="b-field-wrap"><label>Full Name</label><input value="Jane Smith" readonly /></div>
+          </div>
+          <div class="b-row">
+            <span class="b-icon">@</span>
+            <div class="b-field-wrap"><label>Email</label><input value="jane@example.com" readonly /></div>
+          </div>
+        </div>
+        <div class="b-section" style="padding-top: 0;">
+          <div class="b-section-label">Access</div>
+          <div class="b-row">
+            <span class="b-icon">◈</span>
+            <div class="b-field-wrap"><label>Role</label><select><option>Agent</option></select></div>
+          </div>
+          <div class="b-row">
+            <span class="b-icon">◉</span>
+            <div class="b-field-wrap"><label>Status</label><select><option>Active</option></select></div>
+          </div>
+        </div>
+        <div class="b-footer">
+          <button class="b-btn-ghost">Cancel</button>
+          <button class="b-btn-primary">Save Agent</button>
+        </div>
+      </div>
+      <div class="card-label">B — Sectioned + Icons</div>
+      <div class="card-desc">Glowing icon badge header. Fields grouped by "Profile" / "Access" with per-field icons.</div>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content" style="padding: 0;">
+      <div class="drawer">
+        <div class="c-header">
+          <div class="c-header-top">
+            <div>
+              <div class="c-title-row">
+                <div class="c-dot"></div>
+                <h3>Add New Agent</h3>
+              </div>
+              <div class="c-step">Account will receive an invite email</div>
+            </div>
+            <span class="tag">New</span>
+          </div>
+        </div>
+        <div class="c-body">
+          <div class="c-group">
+            <div class="c-group-label">Identity</div>
+            <div class="c-field"><label>Name</label><input value="Jane Smith" readonly /></div>
+            <div class="c-field"><label>Email</label><input value="jane@example.com" readonly /></div>
+            <div class="c-field"><label>Phone</label><input value="+1 (555) 000-0000" readonly /></div>
+          </div>
+          <div class="c-group">
+            <div class="c-group-label">Role & Status</div>
+            <div class="c-grid">
+              <div class="c-field"><label>Role</label><select><option>Agent</option></select></div>
+              <div class="c-field"><label>Status</label><select><option>Active</option></select></div>
+            </div>
+          </div>
+        </div>
+        <div class="c-footer">
+          <div class="c-step-dots">
+            <div class="c-step-dot active"></div>
+            <div class="c-step-dot"></div>
+            <div class="c-step-dot"></div>
+          </div>
+          <div class="c-actions">
+            <button class="c-btn-ghost">Cancel</button>
+            <button class="c-btn-primary">Save →</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-label">C — Grouped Cards</div>
+      <div class="card-desc">Fields nested in subtle card groups ("Identity", "Role & Status"). Minimal accent dot header.</div>
+    </div>
+  </div>
+
+</div>

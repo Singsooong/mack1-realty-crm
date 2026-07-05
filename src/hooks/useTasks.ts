@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetchTasks, createTask, toggleTaskComplete, updateTask } from '../services/tasks'
+import { fetchTasks, createTask, updateTask, deleteTask } from '../services/tasks'
 import type { Task } from '../types'
 
 export function useTasks() {
@@ -14,26 +14,41 @@ export function useTasks() {
       .finally(() => setLoading(false))
   }, [])
 
-  async function handleToggleComplete(id: string) {
-    const task = tasks.find(t => t.id === id)
-    if (!task) return
-    const newCompleted = !task.completed
-    // Optimistic update
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: newCompleted } : t))
-    try {
-      await toggleTaskComplete(id, newCompleted)
-    } catch (e) {
-      // Revert on failure
-      setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: task.completed } : t))
-      throw e
-    }
-  }
-
   async function handleCreateTask(data: Omit<Task, 'id' | 'assignedAgentName'>) {
     const created = await createTask(data)
     setTasks(prev => [...prev, created])
     return created
   }
 
-  return { tasks, loading, error, toggleTaskComplete: handleToggleComplete, createTask: handleCreateTask }
+  async function handleUpdateTask(id: string, data: Partial<Omit<Task, 'id' | 'assignedAgentName'>>) {
+    // Optimistic update
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, ...data } : t))
+    try {
+      await updateTask(id, data)
+    } catch (e) {
+      // Revert on failure
+      fetchTasks().then(setTasks)
+      throw e
+    }
+  }
+
+  async function handleDeleteTask(id: string) {
+    const snapshot = tasks
+    setTasks(prev => prev.filter(t => t.id !== id))
+    try {
+      await deleteTask(id)
+    } catch (e) {
+      setTasks(snapshot)
+      throw e
+    }
+  }
+
+  return {
+    tasks,
+    loading,
+    error,
+    createTask: handleCreateTask,
+    updateTask: handleUpdateTask,
+    deleteTask: handleDeleteTask,
+  }
 }

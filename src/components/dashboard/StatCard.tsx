@@ -13,27 +13,35 @@ const ICON_MAP: Record<string, LucideIcon> = {
 
 export function StatCard({ card }: { card: StatCardType }) {
   const Icon = ICON_MAP[card.iconVariant]
+  const hasTrend = card.trend !== undefined && card.trendDirection !== undefined
+  const hasSparkline = card.sparklineData !== undefined && card.sparklineData.length > 0
 
   return (
     <Card>
       <CardContent className="p-6 flex justify-between items-start gap-4">
         <div className="flex flex-col gap-2 min-w-0">
-          <span className="text-sm font-medium text-muted-foreground">{card.label}</span>
-          <span className="text-3xl font-bold text-foreground leading-none">{card.value}</span>
-          <div className="flex items-center gap-2 mt-1">
-            <TrendBadge value={card.trend} direction={card.trendDirection} />
-            <span className="text-xs text-muted-foreground">vs last year</span>
-          </div>
+          <span className="text-caption-sm uppercase text-muted-foreground">{card.label}</span>
+          <span className="text-heading-xl text-foreground">{card.value}</span>
+          {hasTrend ? (
+            <div className="flex items-center gap-2 mt-1">
+              <TrendBadge value={card.trend!} direction={card.trendDirection!} />
+              {card.hint && <span className="text-xs text-muted-foreground">{card.hint}</span>}
+            </div>
+          ) : card.hint ? (
+            <span className="text-xs text-muted-foreground mt-1">{card.hint}</span>
+          ) : null}
         </div>
         <div className="flex flex-col items-end gap-2 shrink-0">
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-muted">
             <Icon className="h-5 w-5 text-muted-foreground" />
           </div>
-          <MiniSparkline
-            data={card.sparklineData}
-            color={card.sparklineColor}
-            variant={card.sparklineVariant}
-          />
+          {hasSparkline && (
+            <MiniSparkline
+              data={card.sparklineData!}
+              color={card.sparklineColor ?? 'oklch(0.696 0.17 162.48)'}
+              variant={card.sparklineVariant ?? 'line'}
+            />
+          )}
         </div>
       </CardContent>
     </Card>

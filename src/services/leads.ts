@@ -66,3 +66,29 @@ export async function reassignLead(id: string, agentId: string): Promise<void> {
   const { error } = await supabase.from('leads').update({ assigned_agent_id: agentId }).eq('id', id)
   if (error) throw new Error(error.message)
 }
+
+export async function updateLead(id: string, data: Partial<Omit<Lead, 'id' | 'assignedAgentName'>>): Promise<Lead> {
+  const dbUpdates: Record<string, any> = {}
+  if (data.name !== undefined) dbUpdates.name = data.name
+  if (data.email !== undefined) dbUpdates.email = data.email
+  if (data.phone !== undefined) dbUpdates.phone = data.phone
+  if (data.propertyInterest !== undefined) dbUpdates.property_interest = data.propertyInterest
+  if (data.message !== undefined) dbUpdates.message = data.message
+  if (data.status !== undefined) dbUpdates.status = data.status
+  if (data.assignedAgentId !== undefined) dbUpdates.assigned_agent_id = data.assignedAgentId
+  if (data.date !== undefined) dbUpdates.date = data.date
+
+  const { data: row, error } = await supabase
+    .from('leads')
+    .update(dbUpdates)
+    .eq('id', id)
+    .select('*, agents(name)')
+    .single()
+  if (error) throw new Error(error.message)
+  return transformLead(row as RawLead)
+}
+
+export async function deleteLead(id: string): Promise<void> {
+  const { error } = await supabase.from('leads').delete().eq('id', id)
+  if (error) throw new Error(error.message)
+}

@@ -24,14 +24,26 @@ Deno.serve(async (req) => {
     })
   }
 
-  const supabaseUser = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_ANON_KEY')!,
-    { global: { headers: { Authorization: authHeader } } },
-  )
+  // Extract user ID from JWT token
+  let userId: string | null = null
+  try {
+    const token = authHeader.replace('Bearer ', '')
+    const parts = token.split('.')
+    if (parts.length === 3) {
+      const decoded = JSON.parse(atob(parts[1]))
+      userId = decoded.sub
+      console.log('JWT decoded:', { userId, hasRole: !!decoded.role })
+    }
+  } catch (err) {
+    console.error('JWT decode error:', err)
+    return new Response(JSON.stringify({ error: 'Invalid token' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
 
-  const { data: { user }, error: userError } = await supabaseUser.auth.getUser()
-  if (userError || !user) {
+  if (!userId) {
+    console.error('No userId found in token')
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -41,10 +53,13 @@ Deno.serve(async (req) => {
   const { data: callerAgent, error: callerError } = await supabaseAdmin
     .from('agents')
     .select('role')
-    .eq('user_id', user.id)
+    .eq('user_id', userId)
     .single()
 
+  console.log('Agent lookup:', { userId, callerAgent, callerError: callerError?.message })
+
   if (callerError) {
+    console.error('Agent lookup failed:', callerError)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -52,6 +67,7 @@ Deno.serve(async (req) => {
   }
 
   if (callerAgent?.role !== 'admin') {
+    console.error('User is not admin:', { userId, role: callerAgent?.role })
     return new Response(JSON.stringify({ error: 'Forbidden' }), {
       status: 403,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -59,7 +75,7 @@ Deno.serve(async (req) => {
   }
 
   // Parse request body
-  let body: { name?: string; email?: string; phone?: string; specialty?: string; status?: string; role?: string; avatar_url?: string }
+  let body: { name?: string; email?: string; phone?: string; specialty?: string; status?: string; role?: string; avatar_url?: string; password?: string }
   try {
     body = await req.json()
   } catch {
@@ -68,7 +84,7 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
-  const { name, email, phone, specialty, status, role, avatar_url } = body
+  const { name, email, phone, specialty, status, role, avatar_url, password } = body
 
   if (!name || !email) {
     return new Response(JSON.stringify({ error: 'name and email are required' }), {
@@ -77,10 +93,13 @@ Deno.serve(async (req) => {
     })
   }
 
-  // Create Supabase Auth user with a random temporary password
+  // Use provided password or generate a random one
+  const agentPassword = password || crypto.randomUUID()
+
+  // Create Supabase Auth user with the password
   const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
-    password: crypto.randomUUID(),
+    password: agentPassword,
     email_confirm: true,
   })
 
@@ -123,7 +142,15 @@ Deno.serve(async (req) => {
     })
   }
 
-  return new Response(JSON.stringify(agent), {
+  const responseData = { ...agent, password: agentPassword }
+  console.log('Creating agent response:', {
+    agentId: agent.id,
+    agentPassword,
+    responseDataKeys: Object.keys(responseData),
+    hasPassword: 'password' in responseData,
+    jsonString: JSON.stringify(responseData).substring(0, 100)
+  })
+  return new Response(JSON.stringify(responseData), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
 })

@@ -4,6 +4,7 @@ import {
   updateAgent,
   createAgent as createAgentService,
   deleteAgent as deleteAgentService,
+  resetAgentPassword as resetAgentPasswordService,
 } from '../services/agents'
 import type { Agent } from '../types'
 
@@ -25,15 +26,24 @@ export function useAgents() {
   }
 
   async function handleCreateAgent(
-    data: Pick<Agent, 'name' | 'email' | 'phone' | 'avatarUrl' | 'specialty' | 'status' | 'role'>
-  ) {
-    const newAgent = await createAgentService(data)
-    setAgents(prev => [...prev, newAgent].sort((a, b) => a.name.localeCompare(b.name)))
+    data: Pick<Agent, 'name' | 'email' | 'phone' | 'avatarUrl' | 'specialty' | 'status' | 'role'>,
+    password?: string
+  ): Promise<{ agent: Agent; password: string }> {
+    const result = await createAgentService(data, password)
+    setAgents(prev => [...prev, result.agent].sort((a, b) => a.name.localeCompare(b.name)))
+    return result
   }
 
   async function handleDeleteAgent(id: string) {
     await deleteAgentService(id)
     setAgents(prev => prev.filter(a => a.id !== id))
+  }
+
+  async function handleResetAgentPassword(
+    agentId: string,
+    newPassword: string
+  ): Promise<{ password: string }> {
+    return resetAgentPasswordService(agentId, newPassword)
   }
 
   return {
@@ -43,5 +53,6 @@ export function useAgents() {
     updateAgent: handleUpdateAgent,
     createAgent: handleCreateAgent,
     deleteAgent: handleDeleteAgent,
+    resetAgentPassword: handleResetAgentPassword,
   }
 }
