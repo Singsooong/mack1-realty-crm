@@ -31,7 +31,7 @@ function Stat({ icon: Icon, label, value }: { icon: typeof Mail; label: string; 
         <Icon className="h-5 w-5 text-indigo-400" />
       </div>
       <div>
-        <p className="text-heading-lg text-foreground">{value}</p>
+        <p className="text-2xl font-medium leading-tight text-foreground">{value}</p>
         <p className="text-xs text-muted-foreground">{label}</p>
       </div>
     </div>

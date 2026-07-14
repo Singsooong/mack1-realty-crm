@@ -101,7 +101,7 @@ export function ListingsPage() {
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-heading-xl text-foreground">Listings</h1>
+          <h1 className="text-3xl font-medium leading-tight text-foreground">Listings</h1>
           <p className="text-sm text-muted-foreground">{properties.length} total properties</p>
         </div>
         <Button onClick={() => { setEditingProperty(null); setDrawerOpen(true) }}>

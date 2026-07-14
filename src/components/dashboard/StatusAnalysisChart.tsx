@@ -15,7 +15,7 @@ export function StatusAnalysisChart({ title = 'Lead Pipeline', data }: StatusAna
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div className="flex items-center gap-1.5">
-          <CardTitle className="text-caption-sm uppercase text-muted-foreground">{title}</CardTitle>
+          <CardTitle className="text-xs font-medium leading-normal uppercase text-muted-foreground">{title}</CardTitle>
           <Info className="h-4 w-4 text-muted-foreground" />
         </div>
       </CardHeader>

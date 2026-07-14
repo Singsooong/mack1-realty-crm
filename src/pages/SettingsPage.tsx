@@ -70,7 +70,7 @@ export function SettingsPage() {
   return (
     <div className="p-6 max-w-lg">
       <div className="mb-6">
-        <h1 className="text-heading-xl text-foreground">Settings</h1>
+        <h1 className="text-3xl font-medium leading-tight text-foreground">Settings</h1>
         <p className="text-sm text-muted-foreground mt-1">Manage your profile</p>
       </div>
 

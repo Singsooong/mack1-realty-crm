@@ -13,7 +13,7 @@ export function PropertyGrid({ properties, onViewAll, onSelect }: PropertyGridPr
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-caption-sm uppercase text-muted-foreground">Recent Properties</h2>
+        <h2 className="text-xs font-medium leading-normal uppercase text-muted-foreground">Recent Properties</h2>
         <Button variant="link" size="sm" className="gap-1 text-foreground underline underline-offset-4 decoration-1 hover:decoration-2" onClick={onViewAll}>
           View all <ChevronRight className="h-4 w-4" />
         </Button>

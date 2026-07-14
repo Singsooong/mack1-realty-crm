@@ -20,8 +20,8 @@ export function StatCard({ card }: { card: StatCardType }) {
     <Card>
       <CardContent className="p-6 flex justify-between items-start gap-4">
         <div className="flex flex-col gap-2 min-w-0">
-          <span className="text-caption-sm uppercase text-muted-foreground">{card.label}</span>
-          <span className="text-heading-xl text-foreground">{card.value}</span>
+          <span className="text-xs font-medium leading-normal uppercase text-muted-foreground">{card.label}</span>
+          <span className="text-3xl font-medium leading-tight text-foreground">{card.value}</span>
           {hasTrend ? (
             <div className="flex items-center gap-2 mt-1">
               <TrendBadge value={card.trend!} direction={card.trendDirection!} />

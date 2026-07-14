@@ -90,7 +90,7 @@ export function AgentsPage() {
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-heading-xl text-foreground">Agents</h1>
+          <h1 className="text-3xl font-medium leading-tight text-foreground">Agents</h1>
           <p className="text-sm text-muted-foreground">{agents.length} agents on your team</p>
         </div>
         {isAdmin && (

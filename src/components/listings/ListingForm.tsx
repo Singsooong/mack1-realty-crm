@@ -179,7 +179,7 @@ export function ListingForm({ open, onClose, property, onSave }: ListingFormProp
         <div className="sticky top-0 z-20 bg-background border-b border-border">
           <div className="px-8 py-6">
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-heading-xl text-foreground">
+              <h1 className="text-3xl font-medium leading-tight text-foreground">
                 {property ? 'Edit Listing' : 'Create Listing'}
               </h1>
               <button

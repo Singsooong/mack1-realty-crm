@@ -122,7 +122,7 @@ export function ClientDetailPage({ clientId }: ClientDetailPageProps) {
         </Avatar>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-heading-lg text-foreground">{client.name}</h1>
+            <h1 className="text-2xl font-medium leading-tight text-foreground">{client.name}</h1>
             <ClientStatusSelect value={client.status} onChange={handleStatusChange} />
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">

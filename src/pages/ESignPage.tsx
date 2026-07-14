@@ -201,7 +201,7 @@ export function ESignPage() {
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-heading-xl text-foreground">E-Sign</h1>
+          <h1 className="text-3xl font-medium leading-tight text-foreground">E-Sign</h1>
           <p className="text-sm text-muted-foreground">Records found: {visible.length}</p>
         </div>
         <div className="flex gap-2">

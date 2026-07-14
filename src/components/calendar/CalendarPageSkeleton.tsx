@@ -8,7 +8,7 @@ export function CalendarPageSkeleton() {
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-heading-xl text-foreground">Calendar</h1>
+          <h1 className="text-3xl font-medium leading-tight text-foreground">Calendar</h1>
           <Skeleton className="h-4 w-36 mt-1" />
         </div>
         <Skeleton className="h-9 w-40" />

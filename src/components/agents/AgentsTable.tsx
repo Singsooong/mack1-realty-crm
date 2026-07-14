@@ -282,7 +282,7 @@ export function AgentsTable({
                     <TableCell className="text-right tabular-nums">{agent.listings}</TableCell>
                     <TableCell className="text-right tabular-nums">{agent.sales}</TableCell>
                     <TableCell>
-                      <Badge variant={agent.status === 'active' ? 'success' : 'secondary'} className="capitalize">
+                      <Badge variant={agent.status === 'active' ? 'default' : 'secondary'} className="capitalize">
                         {agent.status}
                       </Badge>
                     </TableCell>

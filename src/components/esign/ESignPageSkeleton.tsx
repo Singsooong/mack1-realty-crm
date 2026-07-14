@@ -12,7 +12,7 @@ export function ESignPageSkeleton() {
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-heading-xl text-foreground">E-Sign</h1>
+          <h1 className="text-3xl font-medium leading-tight text-foreground">E-Sign</h1>
           <Skeleton className="h-4 w-28 mt-1" />
         </div>
         <div className="flex gap-2">

@@ -12,8 +12,8 @@ export function PageHeader({ onExport, exportDisabled }: PageHeaderProps) {
     <div className="flex items-end justify-between">
       <div className="flex flex-col gap-1.5">
         {/* Nike eyebrow: caption-sm, uppercase, no tracking (spec is letterSpacing 0) */}
-        <span className="text-caption-sm uppercase text-muted-foreground">{today}</span>
-        <h1 className="text-heading-xl text-foreground">Dashboard</h1>
+        <span className="text-xs font-medium leading-normal uppercase text-muted-foreground">{today}</span>
+        <h1 className="text-3xl font-medium leading-tight text-foreground">Dashboard</h1>
       </div>
       <Button variant="outline" className="gap-2" onClick={onExport} disabled={exportDisabled}>
         <Download className="h-4 w-4" /> Export
